@@ -17,7 +17,7 @@ void kernel_start()
     
     
     char a[80];
-    sprintf(a, "Hello World, disk\n");
+    sprintf(a, "Hello World, disk, disk \n");
     write_console((unsigned) strlen(a), a);
     
     shutdown_machine();
