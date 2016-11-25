@@ -7,6 +7,7 @@
 //
 
 #include "kernel.h"
+#include "test.h"
 
 void kernel_start()
 {
@@ -15,14 +16,11 @@ void kernel_start()
     start_disk();
     ivec_init();
     
-    
     char a[80];
-
     sprintf(a, "Hello World, disk, disk \n");
-    
-    char un = 0;
-    
     write_console((unsigned) strlen(a), a);
+    
+    test_func();
     
     shutdown_machine();
 }

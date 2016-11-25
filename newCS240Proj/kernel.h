@@ -15,6 +15,7 @@
 
 #include "hardware_interface.h"
 #include "interrupt.h"
+#include "diskio.h"
 
 void kernel_start();
 

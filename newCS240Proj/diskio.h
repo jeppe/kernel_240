@@ -9,6 +9,9 @@
 #ifndef diskio_h
 #define diskio_h
 
+#include "OS_CFG.h"
+
+
 
 
 #endif /* diskio_h */
