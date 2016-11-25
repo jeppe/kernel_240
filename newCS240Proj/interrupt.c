@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "interrupt.h"
+#include "kernel.h"
 
 /*
  input should be ignored
@@ -29,10 +30,14 @@ void clock_handler(int input){
  void disk_handler(int input){
     
      char a[80];
-     sprintf(a, "Disk Handler Implemented.\n");
+     sprintf(a, "Disk Handler Implemented %d.\n", input);
      write_console((unsigned) strlen(a), a);
-     halt();
-
+     
+     handlerCont *temp;
+     temp = find_cont(handlerArrays, input);
+     
+     temp->co->func(temp->co->params);
+     
 }
 
 /*

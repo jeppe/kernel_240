@@ -15,6 +15,9 @@ void kernel_start()
     initialize_memory();
     start_disk();
     ivec_init();
+    init_cont(handlerArrays);
+    
+    set_debug_mode(0);
     
     char a[80];
     sprintf(a, "Hello World, disk, disk \n");
@@ -22,5 +25,6 @@ void kernel_start()
     
     test_func();
     
+    halt();
     shutdown_machine();
 }

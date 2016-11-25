@@ -10,6 +10,7 @@
 #define diskio_h
 
 #include "OS_CFG.h"
+#include "continuation.h"
 
 #define BITMAP_DISK_BLOCK                    66
 
