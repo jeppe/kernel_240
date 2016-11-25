@@ -36,6 +36,4 @@ void flip_bitmap(bitmap map, int bid); // flip bitmap
 void write_bitmap_disk(bitmap *map, int disk_block_id); // write disk_status bitmap back to disk, bitmap block_id
 
 
-
-
 #endif /* diskio_h */
