@@ -31,7 +31,7 @@ void disk_write_test(){
     struct Temp *temp;
     temp = (struct Temp *)map_physical_page(addr);
     temp->array[0] = '1';
-    temp->array[1] = '10';
+    temp->array[1] = 'z';
     temp->array[2] = '\0';
     t_id tid = write_disk(0, 1, addr);
     insert_cont(handlerArrays, curcon_obj, tid);
