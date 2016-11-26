@@ -11,29 +11,93 @@
 
 #include "OS_CFG.h"
 #include "continuation.h"
+#include "kernel.h"
+#include <stdint.h>
+#include <limits.h>
 
-#define BITMAP_DISK_BLOCK                    66
 
+/*
+  =======================================
+    Continuation Queue
+  =======================================
+*/
+
+//// function pointer variable
+//typedef void (*cont_func) (void*);
+//typedef struct cont_obj{
+//    cont_func func;
+//    void *params;
+//} cont_obj;
+
+
+/* a link in the queue, holds the info and point to the next Node*/
+typedef struct {
+    int info;
+} DATA;
+
+typedef struct Node {
+    t_id tid;
+    char job_type;
+    unsigned int base_sector;
+    unsigned int sector_num;
+    void *buffer;
+    cont_func func;
+    void *params;
+    
+    struct Node *prev;
+} NODE;
+
+/* the HEAD of the Queue, hold the amount of node's that are in the queue*/
+typedef struct Queue {
+    NODE *head;
+    NODE *tail;
+    int size;
+    int limit;
+} Queue;
+
+
+void InitQueue();
+void DestructQueue(Queue *queue);
+int Enqueue(Queue *pQueue, NODE *item);
+NODE *Dequeue(Queue *pQueue);
+int isEmpty(Queue* pQueue);
+NODE *preDequeue(Queue *pQueue);
+
+extern Queue* ContQueue;
+
+/*
+   =======================================
+    Define bit map available operations
+   =======================================
+*/
 // Bitmap to track free disk blocks
 typedef struct bitmap{
-    int map[4096];
+    unsigned int DISKBITMAP[BITMAP_SIZE];
 } bitmap;
 
-/* 
-   ===================================
-   Define bit map available operations
-   ===================================
+static bitmap diskbitmap;
+
+typedef struct Temsp {
+    char array[512];
+} Temsp;
+
+void init_bitmap(bitmap *b);
+int bitmapGet(bitmap *b);
+void bitmapSet(bitmap *b, unsigned int pos);
+void bitmapReset(bitmap *b, unsigned int pos);
+void bset(unsigned int *b, unsigned int pos);
+void breset(unsigned int *b, unsigned int pos);
+
+void write_bitmap_to_disk(bitmap *b); // write disk_status bitmap back to disk, bitmap block_id
+void read_bitmap_from_disk(bitmap *b); // write disk_status bitmap back to disk, bitmap block_id
+
+/*
+   ========================================
+    Disk Page Size 4KB IO
+   ========================================
  */
 
-int get_free_block_id(bitmap map); // get free block id
-
-int map_row_num(int bid); // get row number for the bitmap
-int map_col_num(int bid); // get column number for the bitmap
-
-void delete_block(bitmap map, int bid); // delete a single block
-void flip_bitmap(bitmap map, int bid); // flip bitmap
-
-void write_bitmap_disk(bitmap *map, int disk_block_id); // write disk_status bitmap back to disk, bitmap block_id
-
+NODE * disk4k_write(unsigned int page_id,unsigned int length,void *buffer);
+NODE * disk4k_read(unsigned int page_id, unsigned int length, void *buffer);
 
 #endif /* diskio_h */

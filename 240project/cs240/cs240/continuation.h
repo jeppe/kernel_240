@@ -9,13 +9,10 @@
 #ifndef continuation_h
 #define continuation_h
 #include "hardware_interface.h"
-
-#define CONTINUATION_SIZE                   512
-#define FALSE                               0
-#define TRUE                                1
+#include "OS_CFG.h"
 
 // function pointer variable
-typedef void (*cont_func) (int*);
+typedef void (*cont_func) (void*);
 
 typedef struct cont_obj{
     cont_func func;

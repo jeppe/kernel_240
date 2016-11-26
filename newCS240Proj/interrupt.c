@@ -13,6 +13,7 @@
 
 #include "interrupt.h"
 #include "kernel.h"
+#include "diskio.h"
 
 /*
  input should be ignored
@@ -33,11 +34,25 @@ void clock_handler(int input){
      sprintf(a, "Disk Handler Implemented %d.\n", input);
      write_console((unsigned) strlen(a), a);
      
-     handlerCont *temp;
-     temp = find_cont(handlerArrays, input);
-     
-     temp->co->func(temp->co->params);
-     
+     NODE *item = preDequeue(ContQueue);
+     if(item != NULL){
+         if(item->tid > -1 && item->tid == input){
+             item->func(item->params);
+             Dequeue(ContQueue);
+             
+             NODE *titem = preDequeue(ContQueue);
+             if(titem != NULL){
+                 if(titem->job_type == WRITE)
+                     titem->tid = write_disk(item->base_sector, item->sector_num, item->buffer);
+                 else
+                     titem->tid = read_disk(item->base_sector, item->sector_num, item->buffer);
+             }
+             else{
+                 sprintf(a, "IO Queue is empty.\n");
+                 write_console((unsigned) strlen(a), a);
+             }
+         }
+     }
 }
 
 /*
